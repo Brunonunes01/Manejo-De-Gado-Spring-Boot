@@ -1,0 +1,53 @@
+<html lang="pt-br"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<section layout:fragment="conteudo">
+
+    <h1 class="mb-4" th:text="${titulo} ?: 'Formulário de Lote'"></h1>
+
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h4 class="my-0 fw-normal">Dados do Lote</h4>
+        </div>
+        <div class="card-body">
+
+            <form th:action="@{/lotes/salvar}" method="post" th:object="${lote}">
+
+                <input type="hidden" th:field="*{id}" />
+
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Nome:</label>
+                    <input type="text" id="nome" class="form-control" th:field="*{nome}" required />
+                </div>
+
+                <div class="mb-3">
+                    <label for="descricao" class="form-label">Descrição:</label>
+                    <textarea id="descricao" class="form-control" th:field="*{descricao}" rows="3"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="localizacao" class="form-label">Localização:</label>
+                    <input type="text" id="localizacao" class="form-control" th:field="*{localizacao}" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status:</label>
+                    <input type="text" id="status" class="form-control" th:field="*{status}" placeholder="Ex: ATIVO" required />
+                </div>
+
+                <hr class="my-4">
+                <button class="btn btn-primary btn-lg" type="submit">
+                    <i class="bi bi-check-circle-fill"></i> Salvar Lote
+                </button>
+                <a href="/lotes" class="btn btn-secondary btn-lg">
+                    <i class="bi bi-x-circle-fill"></i> Cancelar
+                </a>
+
+            </form>
+        </div>
+    </div>
+
+</section>
+</html>

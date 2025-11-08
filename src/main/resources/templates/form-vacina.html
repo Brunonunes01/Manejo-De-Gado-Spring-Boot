@@ -1,0 +1,60 @@
+<html lang="pt-br"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<section layout:fragment="conteudo">
+
+    <h1 class="mb-4" th:text="${titulo} ?: 'Formulário de Vacina'"></h1>
+
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h4 class="my-0 fw-normal">Dados da Vacina</h4>
+        </div>
+        <div class="card-body">
+
+            <form th:action="@{/vacinas/salvar}" method="post" th:object="${vacina}">
+
+                <input type="hidden" th:field="*{id}" />
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="nome" class="form-label">Nome da Vacina:</label>
+                        <input type="text" id="nome" class="form-control" th:field="*{nome}" required />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="fabricante" class="form-label">Fabricante:</label>
+                        <input type="text" id="fabricante" class="form-control" th:field="*{fabricante}" />
+                    </div>
+                </div> <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="loteFabricacao" class="form-label">Lote do Fabricante:</label>
+                    <input type="text" id="loteFabricacao" class="form-control" th:field="*{loteFabricacao}" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="dataValidade" class="form-label">Data de Validade:</label>
+                    <input type="date" id="dataValidade" class="form-control" th:field="*{dataValidade}" required />
+                </div>
+            </div> <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="diasCarenciaAbate" class="form-label">Dias de Carência (Abate):</label>
+                    <input type="number" id="diasCarenciaAbate" class="form-control" th:field="*{diasCarenciaAbate}" placeholder="0" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="tipo" class="form-label">Tipo (Opcional):</label>
+                    <input type="text" id="tipo" class="form-control" th:field="*{tipo}" placeholder="Ex: Obrigatória, Viral" />
+                </div>
+            </div> <hr class="my-4">
+                <button class="btn btn-primary btn-lg" type="submit">
+                    <i class="bi bi-check-circle-fill"></i> Salvar Vacina
+                </button>
+                <a href="/vacinas" class="btn btn-secondary btn-lg">
+                    <i class="bi bi-x-circle-fill"></i> Cancelar
+                </a>
+
+            </form>
+        </div>
+    </div>
+
+</section>
+</html>

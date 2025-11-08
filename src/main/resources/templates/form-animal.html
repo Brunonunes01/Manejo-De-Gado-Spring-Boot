@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-br"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<div layout:fragment="conteudo">
+
+    <!-- Header da Página -->
+    <div class="page-header mb-4">
+        <h1 class="page-title">
+            <i class="bi bi-clipboard2-plus-fill"></i>
+            <span th:text="${titulo} ?: 'Cadastrar Animal'">Cadastrar Animal</span>
+        </h1>
+        <p class="text-muted mb-0">Preencha os dados do animal para adicionar ao rebanho</p>
+    </div>
+
+    <!-- Alerta: Nenhum lote cadastrado -->
+    <div th:if="${#lists.isEmpty(listaDeLotes)}" class="card border-warning mb-4">
+        <div class="card-body p-5 text-center">
+            <i class="bi bi-exclamation-triangle-fill display-1 text-warning mb-4"></i>
+            <h2 class="mb-3">Atenção: Nenhum lote cadastrado!</h2>
+            <p class="lead text-muted mb-4">
+                Para cadastrar um novo animal, você precisa primeiro criar um lote.
+            </p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a th:href="@{/lotes/novo}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-plus-circle-fill me-2"></i>
+                    Criar Primeiro Lote
+                </a>
+                <a th:href="@{/animais}" class="btn btn-secondary btn-lg">
+                    <i class="bi bi-arrow-left-circle me-2"></i>
+                    Voltar
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulário -->
+    <div th:unless="${#lists.isEmpty(listaDeLotes)}">
+        <form th:action="@{/animais/salvar}" method="post" th:object="${animal}">
+            <input type="hidden" th:field="*{id}" />
+
+            <!-- Card: Identificação -->
+            <div class="card mb-3">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-tag-fill me-2"></i>
+                        Identificação do Animal
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="brinco" class="form-label fw-semibold">
+                                Número do Brinco *
+                            </label>
+                            <input type="text"
+                                   id="brinco"
+                                   class="form-control"
+                                   th:field="*{brinco}"
+                                   placeholder="Ex: BR-001"
+                                   required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="lote" class="form-label fw-semibold">
+                                Lote *
+                            </label>
+                            <select id="lote" class="form-select" th:field="*{loteId}" required>
+                                <option value="">Selecione o lote...</option>
+                                <option th:each="lote : ${listaDeLotes}"
+                                        th:value="${lote.id}"
+                                        th:text="${lote.nome}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card: Características -->
+            <div class="card mb-3">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-award-fill me-2"></i>
+                        Características
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label for="sexo" class="form-label fw-semibold">Sexo *</label>
+                            <select id="sexo" class="form-select" th:field="*{sexo}" required>
+                                <option value="">Selecione...</option>
+                                <option value="MACHO">MACHO</option>
+                                <option value="FEMEA">FÊMEA</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="raca" class="form-label fw-semibold">Raça *</label>
+                            <input type="text"
+                                   id="raca"
+                                   class="form-control"
+                                   th:field="*{raca}"
+                                   placeholder="Ex: Nelore"
+                                   required />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="status" class="form-label fw-semibold">Status *</label>
+                            <select id="status" class="form-select" th:field="*{status}" required>
+                                <option value="">Selecione...</option>
+                                <option value="ATIVO">ATIVO</option>
+                                <option value="VENDIDO">VENDIDO</option>
+                                <option value="MORTO">MORTO</option>
+                                <option value="DOENTE">DOENTE</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card: Datas -->
+            <div class="card mb-3">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-calendar-event-fill me-2"></i>
+                        Datas
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="dataNascimento" class="form-label fw-semibold">
+                                Data de Nascimento *
+                            </label>
+                            <input type="date"
+                                   id="dataNascimento"
+                                   class="form-control"
+                                   th:field="*{dataNascimento}"
+                                   required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="dataEntrada" class="form-label fw-semibold">
+                                Data de Entrada *
+                            </label>
+                            <input type="date"
+                                   id="dataEntrada"
+                                   class="form-control"
+                                   th:field="*{dataEntrada}"
+                                   required />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card: Informações Adicionais -->
+            <div class="card mb-3">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-info-circle-fill me-2"></i>
+                        Informações Adicionais (Opcional)
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="brincoMae" class="form-label fw-semibold">
+                            Brinco da Mãe
+                        </label>
+                        <input type="text"
+                               id="brincoMae"
+                               class="form-control"
+                               th:field="*{brincoMae}"
+                               placeholder="Ex: BR-050" />
+                    </div>
+
+                    <div class="mb-0">
+                        <label for="observacao" class="form-label fw-semibold">
+                            Observações
+                        </label>
+                        <textarea id="observacao"
+                                  class="form-control"
+                                  th:field="*{observacao}"
+                                  rows="3"
+                                  placeholder="Anotações sobre o animal..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botões -->
+            <div class="d-flex gap-2 mb-4">
+                <button class="btn btn-primary btn-lg" type="submit">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    Salvar Animal
+                </button>
+
+                <a th:href="@{/animais}" class="btn btn-secondary btn-lg">
+                    <i class="bi bi-x-circle me-2"></i>
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+
+</div>
+</html>

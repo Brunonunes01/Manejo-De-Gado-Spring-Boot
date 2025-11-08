@@ -1,0 +1,92 @@
+<html lang="pt-br"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<section layout:fragment="conteudo">
+
+    <h1 class="mb-4" th:text="${titulo} ?: 'Formulário de Aplicação'"></h1>
+
+    <div th:if="${listaDeAnimais.empty} OR ${listaDeVacinas.empty}">
+
+        <div th:if="${listaDeAnimais.empty}" class="alert alert-warning">
+            <h2>Atenção: Nenhum animal cadastrado!</h2>
+            <p>Você precisa ter pelo menos um animal para registrar uma aplicação.</p>
+            <p><a href="/animais/novo" class="btn btn-primary">Criar Novo Animal</a></p>
+        </div>
+
+        <div th:if="${listaDeVacinas.empty}" class="alert alert-warning">
+            <h2>Atenção: Nenhuma vacina cadastrada!</h2>
+            <p>Você precisa ter pelo menos uma vacina para registrar uma aplicação.</p>
+            <p><a href="/vacinas/novo" class="btn btn-primary">Criar Nova Vacina</a></p>
+        </div>
+
+        <br>
+        <a href="/aplicacoes" class="btn btn-secondary">Voltar para Lista</a>
+    </div>
+
+    <div class="card shadow-sm" th:unless="${listaDeAnimais.empty} OR ${listaDeVacinas.empty}">
+        <div class="card-header">
+            <h4 class="my-0 fw-normal">Dados da Aplicação</h4>
+        </div>
+        <div class="card-body">
+
+            <form th:action="@{/aplicacoes/salvar}" method="post" th:object="${aplicacao}">
+
+                <input type="hidden" th:field="*{id}" />
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="animal" class="form-label">Animal (Brinco):</label>
+                        <select id="animal" class="form-select" th:field="*{animalId}" required>
+                            <option value="" disabled th:selected="${aplicacao.id == null}">Selecione um Animal...</option>
+                            <option th:each="animal : ${listaDeAnimais}"
+                                    th:value="${animal.id}"
+                                    th:text="${animal.brinco}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="vacina" class="form-label">Vacina:</label>
+                        <select id="vacina" class="form-select" th:field="*{vacinaId}" required>
+                            <option value="" disabled th:selected="${aplicacao.id == null}">Selecione uma Vacina...</option>
+                            <option th:each="vac : ${listaDeVacinas}"
+                                    th:value="${vac.id}"
+                                    th:text="${vac.nome} + ' (Lote: ' + ${vac.loteFabricacao} + ')'">
+                            </option>
+                        </select>
+                    </div>
+                </div> <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="dataAplicacao" class="form-label">Data da Aplicação:</label>
+                    <input type="date" id="dataAplicacao" class="form-control" th:field="*{dataAplicacao}" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="dose" class="form-label">Dose:</label>
+                    <input type="text" id="dose" class="form-control" th:field="*{dose}" placeholder="Ex: 5ml" />
+                </div>
+            </div> <div class="mb-3">
+                <label for="aplicador" class="form-label">Aplicador (Funcionário):</label>
+                <input type="text" id="aplicador" class="form-control" th:field="*{aplicador}" placeholder="Ex: Bruno" />
+            </div>
+
+                <div class="mb-3">
+                    <label for="observacao" class="form-label">Observações (Opcional):</label>
+                    <textarea id="observacao" class="form-control" th:field="*{observacao}" rows="3"></textarea>
+                </div>
+
+                <hr class="my-4">
+                <button class="btn btn-primary btn-lg" type="submit">
+                    <i class="bi bi-check-circle-fill"></i> Salvar Aplicação
+                </button>
+                <a href="/aplicacoes" class="btn btn-secondary btn-lg">
+                    <i class="bi bi-x-circle-fill"></i> Cancelar
+                </a>
+
+            </form>
+        </div>
+    </div>
+
+</section>
+</html>

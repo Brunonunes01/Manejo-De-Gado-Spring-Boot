@@ -1,0 +1,67 @@
+<html lang="pt-br"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<section layout:fragment="conteudo">
+
+    <h1 class="mb-4" th:text="${titulo} ?: 'Formulário de Pesagem'"></h1>
+
+    <div th:if="${listaDeAnimais.empty}" class="alert alert-warning">
+        <h2>Atenção: Nenhum animal cadastrado!</h2>
+        <p>Para registrar uma pesagem, você precisa primeiro ter um animal cadastrado.</p>
+        <p><a href="/animais/novo" class="btn btn-primary">Criar Novo Animal</a></p>
+        <br>
+        <a href="/pesagens" class="btn btn-secondary">Voltar para Lista</a>
+    </div>
+
+    <div class="card shadow-sm" th:unless="${listaDeAnimais.empty}">
+        <div class="card-header">
+            <h4 class="my-0 fw-normal">Dados da Pesagem</h4>
+        </div>
+        <div class="card-body">
+
+            <form th:action="@{/pesagens/salvar}" method="post" th:object="${pesagem}">
+
+                <input type="hidden" th:field="*{id}" />
+
+                <div class="mb-3">
+                    <label for="animal" class="form-label">Animal (Brinco):</label>
+                    <select id="animal" class="form-select" th:field="*{animalId}" required>
+                        <option value="" disabled th:selected="${pesagem.id == null}">Selecione um Animal...</option>
+                        <option th:each="animal : ${listaDeAnimais}"
+                                th:value="${animal.id}"
+                                th:text="${animal.brinco}">
+                            BR-001
+                        </option>
+                    </select>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="dataPesagem" class="form-label">Data da Pesagem:</label>
+                        <input type="date" id="dataPesagem" class="form-control" th:field="*{dataPesagem}" required />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="peso" class="form-label">Peso (em Kg):</label>
+                        <input type="number" id="peso" class="form-control" th:field="*{peso}" step="0.1" required />
+                    </div>
+                </div> <div class="mb-3">
+                <label for="observacao" class="form-label">Observações (Opcional):</label>
+                <textarea id="observacao" class="form-control" th:field="*{observacao}" rows="3"></textarea>
+            </div>
+
+                <hr class="my-4">
+                <button class="btn btn-primary btn-lg" type="submit">
+                    <i class="bi bi-check-circle-fill"></i> Salvar Pesagem
+                </button>
+                <a href="/pesagens" class="btn btn-secondary btn-lg">
+                    <i class="bi bi-x-circle-fill"></i> Cancelar
+                </a>
+
+            </form>
+        </div>
+    </div>
+
+</section>
+</html>
