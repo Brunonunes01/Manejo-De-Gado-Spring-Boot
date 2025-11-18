@@ -1,5 +1,6 @@
 package com.fazenda.manejo.business;
 
+// ... imports ...
 import com.fazenda.manejo.infrastructure.dto.AnimalRequest;
 import com.fazenda.manejo.infrastructure.dto.AnimalResponse;
 import com.fazenda.manejo.infrastructure.entitys.Animal;
@@ -20,18 +21,20 @@ public class AnimalService {
     private final AnimalRepository animalRepository;
     private final LoteRepository loteRepository;
 
-    // --- CREATE (Salvar) ---
     @Transactional
     public void salvarAnimal(AnimalRequest request) {
-
-        // 💡 1. NOVA VERIFICAÇÃO (A CORREÇÃO DO ERRO)
-        // Se o loteId for nulo, lança um erro claro ANTES de ir ao banco.
         if (request.getLoteId() == null) {
-            throw new RuntimeException("Erro: Nenhum lote foi selecionado para o animal.");
+            // 💡 USO DA EXCEÇÃO PERSONALIZADA
+            throw new BusinessException("Erro: Nenhum lote foi selecionado para o animal.");
         }
 
         Lote lote = loteRepository.findById(request.getLoteId())
-                .orElseThrow(() -> new RuntimeException("Lote não encontrado com ID: " + request.getLoteId()));
+                .orElseThrow(() -> new BusinessException("Lote não encontrado com ID: " + request.getLoteId()));
+
+        // Verifica se já existe brinco (Regra extra de consistência)
+        if (request.getId() == null && animalRepository.findByBrinco(request.getBrinco()).isPresent()) {
+            throw new BusinessException("Já existe um animal cadastrado com o brinco: " + request.getBrinco());
+        }
 
         Animal novoAnimal = Animal.builder()
                 .brinco(request.getBrinco())
@@ -48,21 +51,25 @@ public class AnimalService {
         animalRepository.saveAndFlush(novoAnimal);
     }
 
-    // --- UPDATE (Atualizar) ---
     @Transactional
     public void atualizarAnimal(Integer id, AnimalRequest request) {
-
         Animal animalDoBanco = animalRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Animal não encontrado com ID: " + id));
+                .orElseThrow(() -> new BusinessException("Animal não encontrado com ID: " + id));
 
-        // 💡 2. NOVA VERIFICAÇÃO (A CORREÇÃO DO ERRO)
         if (request.getLoteId() == null) {
-            throw new RuntimeException("Erro: Nenhum lote foi selecionado para o animal.");
+            throw new BusinessException("Erro: Nenhum lote foi selecionado para o animal.");
         }
 
         Lote lote = loteRepository.findById(request.getLoteId())
-                .orElseThrow(() -> new RuntimeException("Lote não encontrado com ID: " + request.getLoteId()));
+                .orElseThrow(() -> new BusinessException("Lote não encontrado com ID: " + request.getLoteId()));
 
+        // Verifica duplicidade de brinco na edição (se mudou o brinco)
+        if (!animalDoBanco.getBrinco().equals(request.getBrinco()) &&
+                animalRepository.findByBrinco(request.getBrinco()).isPresent()) {
+            throw new BusinessException("Já existe outro animal com o brinco: " + request.getBrinco());
+        }
+
+        // ... (setters permanecem iguais)
         animalDoBanco.setBrinco(request.getBrinco());
         animalDoBanco.setDataNascimento(request.getDataNascimento());
         animalDoBanco.setDataEntrada(request.getDataEntrada());
@@ -76,29 +83,28 @@ public class AnimalService {
         animalRepository.saveAndFlush(animalDoBanco);
     }
 
-    // --- READ (Listar Todos) ---
+    // ... (Listar e Buscar permanecem iguais, apenas trocando Exception se houver) ...
     public List<AnimalResponse> listarTodos() {
         return animalRepository.findAll().stream()
                 .map(this::converterEntidadeParaResponse)
                 .collect(Collectors.toList());
     }
 
-    // --- READ (Buscar por ID para Edição) ---
     public AnimalRequest buscarPorIdParaEdicao(Integer id) {
         Animal animalDoBanco = animalRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Animal não encontrado com ID: " + id));
-
+                .orElseThrow(() -> new BusinessException("Animal não encontrado com ID: " + id));
         return converterEntidadeParaRequest(animalDoBanco);
     }
 
-    // --- DELETE ---
     public void deletarAnimalPorId(Integer id) {
+        if (!animalRepository.existsById(id)) {
+            throw new BusinessException("Animal não encontrado para exclusão.");
+        }
+        // O Controller já trata o DataIntegrityViolationException, então aqui ok.
         animalRepository.deleteById(id);
     }
 
-
-    // --- CONVERSORES (MAPPERS) ---
-
+    // ... (conversores iguais) ...
     private AnimalResponse converterEntidadeParaResponse(Animal entidade) {
         String nomeLote = (entidade.getLote() != null) ? entidade.getLote().getNome() : "Sem Lote";
 

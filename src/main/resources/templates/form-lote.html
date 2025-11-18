@@ -5,49 +5,520 @@
 
 <section layout:fragment="conteudo">
 
-    <h1 class="mb-4" th:text="${titulo} ?: 'Formulário de Lote'"></h1>
+    <div class="container-form">
+        <!-- Header com breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/lotes"><i class="bi bi-house-door"></i> Lotes</a></li>
+                <li class="breadcrumb-item active" th:text="${lote.id != null ? 'Editar Lote' : 'Novo Lote'}">Novo Lote</li>
+            </ol>
+        </nav>
 
-    <div class="card shadow-sm">
-        <div class="card-header">
-            <h4 class="my-0 fw-normal">Dados do Lote</h4>
+        <div class="page-header-form mb-4">
+            <div class="icon-title-wrapper">
+                <div class="icon-circle">
+                    <i class="bi bi-grid-3x3-gap-fill"></i>
+                </div>
+                <div>
+                    <h1 class="form-title" th:text="${titulo} ?: 'Formulário de Lote'">Formulário de Lote</h1>
+                    <p class="form-subtitle">Preencha os dados do lote abaixo</p>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
 
-            <form th:action="@{/lotes/salvar}" method="post" th:object="${lote}">
+        <div class="form-card">
+            <form th:action="@{/lotes/salvar}" method="post" th:object="${lote}" class="modern-form">
 
                 <input type="hidden" th:field="*{id}" />
 
-                <div class="mb-3">
-                    <label for="nome" class="form-label">Nome:</label>
-                    <input type="text" id="nome" class="form-control" th:field="*{nome}" required />
+                <!-- Campo Nome -->
+                <div class="form-group-modern">
+                    <label for="nome" class="form-label-modern">
+                        <i class="bi bi-tag-fill label-icon"></i>
+                        Nome do Lote
+                        <span class="required-star">*</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <input
+                                type="text"
+                                id="nome"
+                                class="form-control-modern"
+                                th:field="*{nome}"
+                                placeholder="Ex: Lote A1, Pasto Norte..."
+                                required
+                                autofocus />
+                        <span class="input-icon">
+                            <i class="bi bi-pencil"></i>
+                        </span>
+                    </div>
+                    <small class="form-hint">Escolha um nome identificador para o lote</small>
                 </div>
 
-                <div class="mb-3">
-                    <label for="descricao" class="form-label">Descrição:</label>
-                    <textarea id="descricao" class="form-control" th:field="*{descricao}" rows="3"></textarea>
+                <!-- Campo Descrição -->
+                <div class="form-group-modern">
+                    <label for="descricao" class="form-label-modern">
+                        <i class="bi bi-file-text label-icon"></i>
+                        Descrição
+                    </label>
+                    <div class="textarea-wrapper">
+                        <textarea
+                                id="descricao"
+                                class="form-control-modern textarea-modern"
+                                th:field="*{descricao}"
+                                rows="4"
+                                placeholder="Descreva características, finalidade ou observações sobre este lote..."></textarea>
+                        <span class="textarea-icon">
+                            <i class="bi bi-chat-left-text"></i>
+                        </span>
+                    </div>
+                    <small class="form-hint">Informações adicionais sobre o lote (opcional)</small>
                 </div>
 
-                <div class="mb-3">
-                    <label for="localizacao" class="form-label">Localização:</label>
-                    <input type="text" id="localizacao" class="form-control" th:field="*{localizacao}" />
+                <!-- Campo Localização -->
+                <div class="form-group-modern">
+                    <label for="localizacao" class="form-label-modern">
+                        <i class="bi bi-geo-alt-fill label-icon"></i>
+                        Localização
+                    </label>
+                    <div class="input-wrapper">
+                        <input
+                                type="text"
+                                id="localizacao"
+                                class="form-control-modern"
+                                th:field="*{localizacao}"
+                                placeholder="Ex: Piquete 1, Setor Norte, Fazenda Central..." />
+                        <span class="input-icon">
+                            <i class="bi bi-map"></i>
+                        </span>
+                    </div>
+                    <small class="form-hint">Onde este lote está localizado na fazenda</small>
                 </div>
 
-                <div class="mb-3">
-                    <label for="status" class="form-label">Status:</label>
-                    <input type="text" id="status" class="form-control" th:field="*{status}" placeholder="Ex: ATIVO" required />
+                <!-- Campo Status -->
+                <div class="form-group-modern">
+                    <label for="status" class="form-label-modern">
+                        <i class="bi bi-heart-pulse-fill label-icon"></i>
+                        Status
+                        <span class="required-star">*</span>
+                    </label>
+                    <div class="status-selector">
+                        <input
+                                type="text"
+                                id="status"
+                                class="form-control-modern"
+                                th:field="*{status}"
+                                placeholder="ATIVO"
+                                required />
+                        <div class="status-chips mt-2">
+                            <button type="button" class="chip-option chip-active" onclick="setStatus('ATIVO')">
+                                <i class="bi bi-check-circle-fill"></i> ATIVO
+                            </button>
+                            <button type="button" class="chip-option chip-inactive" onclick="setStatus('INATIVO')">
+                                <i class="bi bi-dash-circle-fill"></i> INATIVO
+                            </button>
+                            <button type="button" class="chip-option chip-quarantine" onclick="setStatus('QUARENTENA')">
+                                <i class="bi bi-shield-exclamation"></i> QUARENTENA
+                            </button>
+                            <button type="button" class="chip-option chip-maintenance" onclick="setStatus('MANUTENÇÃO')">
+                                <i class="bi bi-tools"></i> MANUTENÇÃO
+                            </button>
+                            <button type="button" class="chip-option chip-rotation" onclick="setStatus('ROTAÇÃO')">
+                                <i class="bi bi-arrow-repeat"></i> ROTAÇÃO
+                            </button>
+                            <button type="button" class="chip-option chip-reserved" onclick="setStatus('RESERVADO')">
+                                <i class="bi bi-lock-fill"></i> RESERVADO
+                            </button>
+                        </div>
+                    </div>
+                    <small class="form-hint">Status atual do lote (selecione ou digite)</small>
                 </div>
 
-                <hr class="my-4">
-                <button class="btn btn-primary btn-lg" type="submit">
-                    <i class="bi bi-check-circle-fill"></i> Salvar Lote
-                </button>
-                <a href="/lotes" class="btn btn-secondary btn-lg">
-                    <i class="bi bi-x-circle-fill"></i> Cancelar
-                </a>
+                <!-- Botões de Ação -->
+                <div class="form-actions">
+                    <a href="/lotes" class="btn-cancel">
+                        <i class="bi bi-x-circle"></i>
+                        <span>Cancelar</span>
+                    </a>
+                    <button class="btn-save" type="submit">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <span>Salvar Lote</span>
+                    </button>
+                </div>
 
             </form>
         </div>
     </div>
+
+    <style>
+        /* Container Principal */
+        .container-form {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin: 0;
+        }
+
+        .breadcrumb-item a {
+            color: #6c757d;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .breadcrumb-item a:hover {
+            color: #4a7c4e;
+        }
+
+        .breadcrumb-item.active {
+            color: #2d5a2f;
+            font-weight: 600;
+        }
+
+        /* Header do Form */
+        .page-header-form {
+            animation: fadeInDown 0.6s ease;
+        }
+
+        .icon-title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .icon-circle {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #4a7c4e 0%, #2d5a2f 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            box-shadow: 0 8px 20px rgba(74, 124, 78, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .form-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2d5a2f;
+            margin: 0;
+        }
+
+        .form-subtitle {
+            color: #6c757d;
+            margin: 0.25rem 0 0 0;
+            font-size: 1rem;
+        }
+
+        /* Card do Formulário */
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            padding: 2.5rem;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Grupos de Form Modernos */
+        .form-group-modern {
+            margin-bottom: 2rem;
+            animation: fadeIn 0.6s ease backwards;
+        }
+
+        .form-group-modern:nth-child(2) { animation-delay: 0.1s; }
+        .form-group-modern:nth-child(3) { animation-delay: 0.2s; }
+        .form-group-modern:nth-child(4) { animation-delay: 0.3s; }
+        .form-group-modern:nth-child(5) { animation-delay: 0.4s; }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .form-label-modern {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: #2d5a2f;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .label-icon {
+            color: #4a7c4e;
+            font-size: 1.1rem;
+        }
+
+        .required-star {
+            color: #dc3545;
+            font-weight: 700;
+            margin-left: 0.25rem;
+        }
+
+        /* Input Wrapper */
+        .input-wrapper, .textarea-wrapper {
+            position: relative;
+        }
+
+        .form-control-modern {
+            width: 100%;
+            padding: 0.875rem 1.25rem;
+            padding-right: 3rem;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-control-modern:focus {
+            outline: none;
+            border-color: #4a7c4e;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(74, 124, 78, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-control-modern:hover {
+            border-color: #c3cfd4;
+        }
+
+        .textarea-modern {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .input-icon, .textarea-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            font-size: 1.2rem;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .textarea-icon {
+            top: 1rem;
+            transform: none;
+        }
+
+        .form-control-modern:focus + .input-icon,
+        .form-control-modern:focus ~ .textarea-icon {
+            color: #4a7c4e;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        /* Status Selector */
+        .status-selector {
+            position: relative;
+        }
+
+        .status-chips {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .chip-option {
+            padding: 0.625rem 1.25rem;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            background: white;
+            color: #6c757d;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .chip-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .chip-active {
+            border-color: #28a745;
+            color: #28a745;
+        }
+
+        .chip-active:hover, .chip-active:focus {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+
+        .chip-inactive {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+
+        .chip-inactive:hover, .chip-inactive:focus {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+
+        /* Form Hints */
+        .form-hint {
+            display: block;
+            margin-top: 0.5rem;
+            color: #6c757d;
+            font-size: 0.875rem;
+            font-style: italic;
+        }
+
+        /* Botões de Ação */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid #f1f3f5;
+            animation: fadeIn 0.6s ease 0.5s backwards;
+        }
+
+        .btn-cancel, .btn-save {
+            flex: 1;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .btn-cancel {
+            background: #f8f9fa;
+            color: #6c757d;
+            border: 2px solid #e9ecef;
+        }
+
+        .btn-cancel:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #4a7c4e 0%, #2d5a2f 100%);
+            color: white;
+            box-shadow: 0 6px 20px rgba(74, 124, 78, 0.3);
+        }
+
+        .btn-save:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(74, 124, 78, 0.4);
+        }
+
+        .btn-save:active, .btn-cancel:active {
+            transform: translateY(0);
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .container-form {
+                padding: 1rem;
+            }
+
+            .form-card {
+                padding: 1.5rem;
+            }
+
+            .icon-title-wrapper {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .form-title {
+                font-size: 1.5rem;
+            }
+
+            .form-actions {
+                flex-direction: column-reverse;
+            }
+
+            .btn-cancel, .btn-save {
+                width: 100%;
+            }
+        }
+    </style>
+
+    <script>
+        function setStatus(status) {
+            document.getElementById('status').value = status;
+
+            // Adiciona feedback visual
+            const input = document.getElementById('status');
+            input.focus();
+
+            // Animação de confirmação
+            input.style.background = status === 'ATIVO' ? '#d4edda' : '#f8d7da';
+            setTimeout(() => {
+                input.style.background = '#f8f9fa';
+            }, 500);
+        }
+
+        // Auto-foco no primeiro campo ao carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            const nomeInput = document.getElementById('nome');
+            if (nomeInput && !nomeInput.value) {
+                nomeInput.focus();
+            }
+        });
+    </script>
 
 </section>
 </html>

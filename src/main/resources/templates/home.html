@@ -12,19 +12,19 @@
 <body>
 <section layout:fragment="conteudo">
 
-    <div class="page-header mb-4">
+    <div class="page-header">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div>
-                <h1 class="page-title mb-2">
-                    <i class="bi bi-sunrise-fill"></i>
-                    Painel da Fazenda
+                <h1 class="page-title">
+                    <i class="bi bi-pie-chart-fill text-success"></i>
+                    Painel de Controle
                 </h1>
-                <p class="text-muted mb-0">Acompanhe o desempenho do seu rebanho em tempo real</p>
+                <p class="text-muted mb-0">Visão geral dos indicadores da propriedade.</p>
             </div>
             <div>
                 <span class="badge-agro">
-                    <i class="bi bi-calendar-check me-1"></i>
-                    <span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}">07/11/2025</span>
+                    <i class="bi bi-calendar-event me-1"></i>
+                    <span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}">Data</span>
                 </span>
             </div>
         </div>
@@ -32,75 +32,57 @@
 
     <div class="row g-4 mb-5">
         <div class="col-md-4">
-            <div class="card card-fazenda card-rebanho h-100">
+            <div class="card h-100 border-start border-4 border-success">
                 <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <p class="text-muted mb-2 small text-uppercase fw-semibold">
-                                <i class="bi bi-cow me-1"></i>
-                                Cabeças de Gado
-                            </p>
-                            <h2 class="mb-0 display-4 fw-bold" th:text="${totalAnimais}">0</h2>
+                            <h6 class="text-uppercase text-muted small fw-bold mb-2">Total de Animais</h6>
+                            <h2 class="mb-0 fw-bold text-dark display-5" th:text="${totalAnimais}">0</h2>
                         </div>
-                        <div class="icone-grande bg-success bg-opacity-10 rounded-circle p-3">
-                            <i class="bi bi-cow fs-1 text-success"></i>
+                        <div class="bg-success bg-opacity-10 p-3 rounded-3">
+                            <i class="bi bi-postcard-heart fs-1 text-success"></i>
                         </div>
                     </div>
-                    <div class="mt-3 pt-3 border-top border-success border-opacity-25">
-                        <small class="text-success">
-                            <i class="bi bi-graph-up-arrow me-1"></i>
-                            Rebanho ativo
-                        </small>
+                    <div class="mt-3 text-muted small">
+                        <i class="bi bi-check-circle-fill text-success me-1"></i> Rebanho Ativo
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="col-md-4">
-            <div class="card card-fazenda card-lotes h-100">
+            <div class="card h-100 border-start border-4 border-primary">
                 <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <p class="text-muted mb-2 small text-uppercase fw-semibold">
-                                <i class="bi bi-grid-3x3 me-1"></i>
-                                Lotes Organizados
-                            </p>
-                            <h2 class="mb-0 display-4 fw-bold" th:text="${totalLotes}">0</h2>
+                            <h6 class="text-uppercase text-muted small fw-bold mb-2">Lotes & Pastos</h6>
+                            <h2 class="mb-0 fw-bold text-dark display-5" th:text="${totalLotes}">0</h2>
                         </div>
-                        <div class="icone-grande bg-primary bg-opacity-10 rounded-circle p-3">
+                        <div class="bg-primary bg-opacity-10 p-3 rounded-3">
                             <i class="bi bi-grid-3x3-gap-fill fs-1 text-primary"></i>
                         </div>
                     </div>
-                    <div class="mt-3 pt-3 border-top border-primary border-opacity-25">
-                        <small class="text-primary">
-                            <i class="bi bi-check-circle me-1"></i>
-                            Manejo organizado
-                        </small>
+                    <div class="mt-3 text-muted small">
+                        <i class="bi bi-geo-alt-fill text-primary me-1"></i> Áreas demarcadas
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="col-md-4">
-            <div class="card card-fazenda card-vacinas h-100">
+            <div class="card h-100 border-start border-4 border-warning">
                 <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <p class="text-muted mb-2 small text-uppercase fw-semibold">
-                                <i class="bi bi-shield-check me-1"></i>
-                                Vacinas Disponíveis
-                            </p>
-                            <h2 class="mb-0 display-4 fw-bold" th:text="${totalVacinas}">0</h2>
+                            <h6 class="text-uppercase text-muted small fw-bold mb-2">Estoque Vacinas</h6>
+                            <h2 class="mb-0 fw-bold text-dark display-5" th:text="${totalVacinas}">0</h2>
                         </div>
-                        <div class="icone-grande bg-warning bg-opacity-10 rounded-circle p-3">
-                            <i class="bi bi-shield-fill-plus fs-1 text-warning"></i>
+                        <div class="bg-warning bg-opacity-10 p-3 rounded-3">
+                            <i class="bi bi-shield-check fs-1 text-warning"></i>
                         </div>
                     </div>
-                    <div class="mt-3 pt-3 border-top border-warning border-opacity-25">
-                        <small class="text-warning">
-                            <i class="bi bi-shield-fill-check me-1"></i>
-                            Saúde protegida
-                        </small>
+                    <div class="mt-3 text-muted small">
+                        <i class="bi bi-capsule text-warning me-1"></i> Tipos cadastrados
                     </div>
                 </div>
             </div>
@@ -108,119 +90,65 @@
     </div>
 
     <div class="mb-4">
-        <h3 class="fw-bold mb-1 text-agro-primary">
-            <i class="bi bi-lightning-charge-fill me-2"></i>
-            Atividades do Dia
-        </h3>
-        <p class="text-muted">Principais tarefas de manejo para otimizar sua produção</p>
+        <h4 class="fw-bold text-dark mb-1">Acesso Rápido</h4>
+        <p class="text-muted">Atalhos para as operações mais frequentes.</p>
     </div>
 
     <div class="row g-4 mb-5">
         <div class="col-lg-3 col-md-6">
-            <div class="card card-acao h-100">
-                <div class="card-body text-center p-4">
-                    <div class="icone-acao mb-3 mx-auto">
-                        <i class="bi bi-cow"></i>
+            <a th:href="@{/animais/novo}" class="text-decoration-none">
+                <div class="card h-100 hover-shadow text-center p-4">
+                    <div class="card-body">
+                        <div class="mb-3 text-success">
+                            <i class="bi bi-plus-circle fs-1"></i>
+                        </div>
+                        <h5 class="card-title fw-bold text-dark">Novo Animal</h5>
+                        <p class="card-text text-muted small">Registrar entrada de gado</p>
                     </div>
-                    <h5 class="fw-bold mb-2">Gerenciar Rebanho</h5>
-                    <p class="text-muted small mb-4">Controle completo dos seus animais</p>
-                    <a th:href="@{/animais}" class="btn btn-outline-success w-100">
-                        <i class="bi bi-arrow-right-circle me-1"></i>
-                        Acessar
-                    </a>
                 </div>
-            </div>
+            </a>
         </div>
 
         <div class="col-lg-3 col-md-6">
-            <div class="card card-acao h-100">
-                <div class="card-body text-center p-4">
-                    <div class="icone-acao mb-3 mx-auto">
-                        <i class="bi bi-grid-3x3-gap-fill"></i>
+            <a th:href="@{/aplicacoes/novo}" class="text-decoration-none">
+                <div class="card h-100 hover-shadow text-center p-4">
+                    <div class="card-body">
+                        <div class="mb-3 text-warning">
+                            <i class="bi bi-syringe fs-1"></i>
+                        </div>
+                        <h5 class="card-title fw-bold text-dark">Vacinação</h5>
+                        <p class="card-text text-muted small">Lançar aplicação sanitária</p>
                     </div>
-                    <h5 class="fw-bold mb-2">Organizar Lotes</h5>
-                    <p class="text-muted small mb-4">Separe e gerencie seus lotes</p>
-                    <a th:href="@{/lotes}" class="btn btn-outline-primary w-100">
-                        <i class="bi bi-arrow-right-circle me-1"></i>
-                        Acessar
-                    </a>
                 </div>
-            </div>
+            </a>
         </div>
 
         <div class="col-lg-3 col-md-6">
-            <div class="card card-acao h-100">
-                <div class="card-body text-center p-4">
-                    <div class="icone-acao mb-3 mx-auto">
-                        <i class="bi bi-syringe-fill"></i>
+            <a th:href="@{/pesagens/novo}" class="text-decoration-none">
+                <div class="card h-100 hover-shadow text-center p-4">
+                    <div class="card-body">
+                        <div class="mb-3 text-primary">
+                            <i class="bi bi-speedometer2 fs-1"></i>
+                        </div>
+                        <h5 class="card-title fw-bold text-dark">Pesagem</h5>
+                        <p class="card-text text-muted small">Registrar ganho de peso</p>
                     </div>
-                    <h5 class="fw-bold mb-2">Aplicar Vacina</h5>
-                    <p class="text-muted small mb-4">Registre vacinação do rebanho</p>
-                    <a th:href="@{/aplicacoes/novo}" class="btn btn-outline-warning w-100">
-                        <i class="bi bi-plus-circle me-1"></i>
-                        Registrar
-                    </a>
                 </div>
-            </div>
+            </a>
         </div>
 
         <div class="col-lg-3 col-md-6">
-            <div class="card card-acao h-100">
-                <div class="card-body text-center p-4">
-                    <div class="icone-acao mb-3 mx-auto">
-                        <i class="bi bi-speedometer2"></i>
-                    </div>
-                    <h5 class="fw-bold mb-2">Pesar Animal</h5>
-                    <p class="text-muted small mb-4">Monitore o ganho de peso</p>
-                    <a th:href="@{/pesagens/novo}" class="btn btn-outline-secondary w-100">
-                        <i class="bi bi-plus-circle me-1"></i>
-                        Registrar
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row g-4">
-        <div class="col-lg-6">
-            <div class="card h-100" style="border-left: 4px solid #4a7c4e;">
-                <div class="card-body p-4">
-                    <h5 class="fw-bold mb-4 text-agro-primary">
-                        <i class="bi bi-bookmarks-fill me-2"></i>
-                        Outras Funcionalidades
-                    </h5>
-                    <div class="d-grid gap-3">
-                        <a th:href="@{/vacinas}" class="btn btn-light border text-start d-flex align-items-center justify-content-between py-3">
-                            <span>
-                                <i class="bi bi-shield-fill-plus me-2 text-warning"></i>
-                                Gerenciar Vacinas
-                            </span>
-                            <i class="bi bi-arrow-right text-muted"></i>
-                        </a>
-                        <a th:href="@{/usuarios}" class="btn btn-light border text-start d-flex align-items-center justify-content-between py-3">
-                            <span>
-                                <i class="bi bi-people-fill me-2 text-primary"></i>
-                                Gerenciar Funcionários
-                            </span>
-                            <i class="bi bi-arrow-right text-muted"></i>
-                        </a>
-                        <a th:href="@{/pesagens}" class="btn btn-light border text-start d-flex align-items-center justify-content-between py-3">
-                            <span>
-                                <i class="bi bi-graph-up me-2 text-success"></i>
-                                Histórico de Pesagens
-                            </span>
-                            <i class="bi bi-arrow-right text-muted"></i>
-                        </a>
-                        <a th:href="@{/aplicacoes}" class="btn btn-light border text-start d-flex align-items-center justify-content-between py-3">
-                            <span>
-                                <i class="bi bi-card-checklist me-2 text-info"></i>
-                                Histórico de Aplicações
-                            </span>
-                            <i class="bi bi-arrow-right text-muted"></i>
-                        </a>
+            <a th:href="@{/lotes/novo}" class="text-decoration-none">
+                <div class="card h-100 hover-shadow text-center p-4">
+                    <div class="card-body">
+                        <div class="mb-3 text-secondary">
+                            <i class="bi bi-map fs-1"></i>
+                        </div>
+                        <h5 class="card-title fw-bold text-dark">Criar Lote</h5>
+                        <p class="card-text text-muted small">Nova área ou grupo</p>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 
