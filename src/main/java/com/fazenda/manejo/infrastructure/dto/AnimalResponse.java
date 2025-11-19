@@ -21,7 +21,7 @@ public class AnimalResponse {
     private String status;
 
     // -----------------------------------------------------------------
-    // 💡 AQUI ESTÁ A CHAVE DO RELACIONAMENTO (OUTPUT)
+    // 💡 AQUI ESTÁ O CAMPO DO RELACIONAMENTO
     // -----------------------------------------------------------------
     /**
      * Na nossa lista de animais, queremos mostrar o NOME do lote,
@@ -29,6 +29,7 @@ public class AnimalResponse {
      */
     private String nomeLote;
 
-    // (Poderíamos adicionar 'ultimoPeso' aqui no futuro,
-    // quando o CRUD de Pesagem estiver pronto)
+    // 💡 NOVO CAMPO: Último Peso registrado
+    private Double ultimoPeso;
+
 }

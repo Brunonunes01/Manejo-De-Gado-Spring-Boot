@@ -5,8 +5,10 @@ import com.fazenda.manejo.infrastructure.dto.AnimalRequest;
 import com.fazenda.manejo.infrastructure.dto.AnimalResponse;
 import com.fazenda.manejo.infrastructure.entitys.Animal;
 import com.fazenda.manejo.infrastructure.entitys.Lote;
+import com.fazenda.manejo.infrastructure.entitys.Pesagem; // NOVO: Para usar a entidade Pesagem
 import com.fazenda.manejo.infrastructure.repository.AnimalRepository;
 import com.fazenda.manejo.infrastructure.repository.LoteRepository;
+import com.fazenda.manejo.infrastructure.repository.PesagemRepository; // NOVO: Repositório de Pesagem
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,9 @@ public class AnimalService {
 
     private final AnimalRepository animalRepository;
     private final LoteRepository loteRepository;
+    // 💡 NOVO: Injeção do repositório de Pesagem
+    private final PesagemRepository pesagemRepository;
+
 
     @Transactional
     public void salvarAnimal(AnimalRequest request) {
@@ -104,9 +109,19 @@ public class AnimalService {
         animalRepository.deleteById(id);
     }
 
-    // ... (conversores iguais) ...
+    // --- CONVERSOR ATUALIZADO ---
     private AnimalResponse converterEntidadeParaResponse(Animal entidade) {
         String nomeLote = (entidade.getLote() != null) ? entidade.getLote().getNome() : "Sem Lote";
+
+        // 💡 NOVO: Lógica para encontrar o último peso
+        Double ultimoPeso = null;
+        // O repositório de Pesagem já tem o método para buscar ordenado do mais recente ao mais antigo
+        List<Pesagem> pesagens = pesagemRepository.findByAnimalIdOrderByDataPesagemDesc(entidade.getId());
+
+        // Se houver pesagens, pega o peso do primeiro (o mais recente)
+        if (!pesagens.isEmpty()) {
+            ultimoPeso = pesagens.get(0).getPeso();
+        }
 
         return AnimalResponse.builder()
                 .id(entidade.getId())
@@ -116,6 +131,7 @@ public class AnimalService {
                 .dataNascimento(entidade.getDataNascimento())
                 .status(entidade.getStatus())
                 .nomeLote(nomeLote)
+                .ultimoPeso(ultimoPeso) // 💡 NOVO: Adiciona o peso ao DTO
                 .build();
     }
 
